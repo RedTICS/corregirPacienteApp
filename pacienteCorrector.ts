@@ -8,13 +8,21 @@ import {
 let matcheosFull = 0;
 let matcheosBajos = 0;
 let noVinculados = 0;
-let limiteQuery = 200;
+let limiteQuery = 300;
 let counter = 0;
 let mongoClient = require('mongodb').MongoClient;
+let winston = require('winston');
 let urlAndes = configPrivate.urlMongoAndes;
 let urlMpi = configPrivate.urlMongoMpi;
-let coleccionPacientesApp = 'pacienteApp';
+let coleccionPacientesApp = 'pacienteAppBk'; // Colección de backup usada para la prueba
 let coleccionPacientes = 'paciente';
+let logger = new (winston.Logger)({
+    transports: [
+      new (winston.transports.Console)(),
+      new (winston.transports.File)({ filename: 'corregirPaciente.log' })
+    ]
+  });
+
 let condicion = {
     'pacientes': {
         $size: 1
@@ -34,11 +42,22 @@ mongoClient.connect(urlAndes, function (err, db) {
                     let matcheo = await matchPacientes(pacApp, pacienteVinculado);
                     if (matcheo <= 0.95) {
                         //TODO Devincular asignar un array vacío al campo "pacientes" de pacienteAPP
-                        // db.collection(coleccionPacientesApp).updateOne({_id:pacApp._id},{$set:{pacientes:[]}})
+                        let pacToUpdate = {
+                            nombre : pacApp.nombre,
+                            apellido : pacApp.apellido,
+                            documento : pacApp.documento,
+                            sexo : pacApp.documento,
+                            email : pacApp.email,
+                            telefono : pacApp.telefono,
+                            pacientes: pacApp.pacientes
+                        }
+                        logger.log('info','Pacientes modificados: ', pacToUpdate);
+                        db.collection(coleccionPacientesApp).updateOne({_id:pacApp._id},{$set:{pacientes:[]}})
                         //
                     }
                 } else {
                     noVinculados = noVinculados + 1;
+                    // logger.log('info','Id del paciente no vinculado: ', pacApp.pacientes[0].id);
                     console.log('Id del paciente no vinculado: ', pacApp.pacientes[0].id)
                 }
                 counter++
