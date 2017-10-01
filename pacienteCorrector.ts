@@ -39,10 +39,11 @@ mongoClient.connect(urlAndes, function (err, db) {
                     }
                 } else {
                     noVinculados = noVinculados + 1;
-                    // console.log('Id del paciente no vinculado: ', pacApp.pacientes[0].id)
+                    console.log('Id del paciente no vinculado: ', pacApp.pacientes[0].id)
                 }
                 counter++
                 if (counter === pacienteApp.length) {
+                    db.close();
                     console.log('Pacientes que matchean mayor o igual al 95%: ', matcheosFull);
                     console.log('Pacientes con valor de matching menor al 95% están mal vinculados: ', matcheosBajos);
                     console.log('valor de pacientes no vinculados, están en la base local ANDES: ', noVinculados);
@@ -52,7 +53,6 @@ mongoClient.connect(urlAndes, function (err, db) {
         } else {
             console.log('No existen pacientes con esa condición');
         }
-        db.close();
     });
 });
 
@@ -105,11 +105,11 @@ function matchPacientes(pacienteApp, pacienteVinculado) {
         //console.log('Valor del matching: ', valorMatching);
         if (valorMatching >= 0.95) {
             matcheosFull = matcheosFull + 1;
-            resolve(matcheosFull);
+            resolve(valorMatching);
         } else {
            
             matcheosBajos = matcheosBajos + 1;
-            resolve(matcheosBajos);
+            resolve(valorMatching);
         }
 
     })
