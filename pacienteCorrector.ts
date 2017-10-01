@@ -34,7 +34,7 @@ mongoClient.connect(urlAndes, function (err, db) {
                     let matcheo = await matchPacientes(pacApp, pacienteVinculado);
                     if (matcheo <= 0.95) {
                         //TODO Devincular asignar un array vacío al campo "pacientes" de pacienteAPP
-
+                        // db.collection(coleccionPacientesApp).updateOne({_id:pacApp._id},{$set:{pacientes:[]}})
                         //
                     }
                 } else {
