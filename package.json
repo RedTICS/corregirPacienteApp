@@ -1,0 +1,16 @@
+{
+  "name": "corregirpacienteapp",
+  "version": "1.0.0",
+  "description": "Corrige los pacientes vinculados con la app mobile",
+  "main": "pacienteCorrector.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Hugo H. Fernández",
+  "license": "ISC",
+  "dependencies": {
+    "@andes/match": "^1.1.9",
+    "mongoclient": "^1.0.3",
+    "typescript": "^2.5.3"
+  }
+}
